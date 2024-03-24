@@ -35,7 +35,6 @@ def disable_loggers():
     fastapi_logger = logging.getLogger("fastapi")
     fastapi_logger.setLevel(level=logging.CRITICAL)
 
-
 def add_custom_logger(
     app: FastAPI,
     custom_logger: callable = default_logger,
@@ -69,7 +68,7 @@ def add_custom_logger(
         except Exception as exc:
             custom_error_logger(
                 **{
-                    "request_body": request_body.decode("utf-8"),
+                    "request_body": request_body.decode("utf-8", errors="replace"),
                     "request_headers": dict(request.headers),
                     "request_query_params": dict(request.query_params),
                     "request_method": request.method,
