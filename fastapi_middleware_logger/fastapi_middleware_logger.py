@@ -1,3 +1,4 @@
+from typing import Callable
 from fastapi import FastAPI, Response, Request
 from starlette.background import BackgroundTask
 from starlette.types import Message
@@ -10,14 +11,19 @@ def parse_body(content):
     except:
         return content
 
+
 def default_logger(**kwargs):
     """Logs all the available information for a normal response"""
-    logging.info(json.dumps(kwargs, indent=4))
+    # logging.info(json.dumps(kwargs, indent=4))
+    for k,v in kwargs.items():
+        logging.info(f'{k}: {v}')
 
 
 def default_error_logger(**kwargs):
     """Logs all the available information for a response with error"""
-    logging.info(json.dumps(kwargs, indent=4))
+    # logging.info(json.dumps(kwargs, indent=4))
+    for k,v in kwargs.items():
+        logging.error(f'{k}: {v}')
 
 
 async def set_body(request: Request, body: bytes):
@@ -42,8 +48,8 @@ def disable_loggers():
 
 def add_custom_logger(
     app: FastAPI,
-    custom_logger: callable = default_logger,
-    custom_error_logger: callable = default_error_logger,
+    custom_logger: Callable = default_logger,
+    custom_error_logger: Callable = default_error_logger,
     disable_uvicorn_logging: bool = True,
 ) -> FastAPI:
     """Function to add custom loggers to a FastAPI application
