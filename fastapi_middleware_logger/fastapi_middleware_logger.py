@@ -4,6 +4,11 @@ from starlette.types import Message
 import logging
 import json
 
+def parse_body(content):
+    try:
+        return content.decode('utf-8')
+    except:
+        return content
 
 def default_logger(**kwargs):
     """Logs all the available information for a normal response"""
@@ -68,7 +73,7 @@ def add_custom_logger(
         except Exception as exc:
             custom_error_logger(
                 **{
-                    "request_body": request_body.decode("utf-8", errors="replace"),
+                    "request_body": parse_body(request_body),
                     "request_headers": dict(request.headers),
                     "request_query_params": dict(request.query_params),
                     "request_method": request.method,
@@ -84,12 +89,12 @@ def add_custom_logger(
         task = BackgroundTask(
             custom_logger,
             **{
-                "request_body": request_body.decode("utf-8"),
+                "request_body": parse_body(request_body),
                 "request_headers": dict(request.headers),
                 "request_query_params": dict(request.query_params),
                 "request_method": request.method,
                 "request_url": str(request.url),
-                "response_body": response_body.decode("utf-8"),
+                "response_body": parse_body(response_body),
                 "response_headers": dict(response.headers),
                 "response_media_type": response.media_type,
                 "response_status_code": response.status_code,
