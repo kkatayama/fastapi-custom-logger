@@ -19,8 +19,10 @@ def default_logger(**kwargs):
         if isinstance(v, dict):
             for kk, vv in v.items():
                 logging.info(f'{k}: {kk} = {vv}')
+        elif isinstance(v, bytes):
+            logging.debug(f'{k}: "{v[:20]}"')
         else:
-            logging.error(f'{k}: {v}')
+            logging.debug(f'{k}: {v}')
 
 
 def default_error_logger(**kwargs):
@@ -29,7 +31,9 @@ def default_error_logger(**kwargs):
     for k, v in kwargs.items():
         if isinstance(v, dict):
             for kk, vv in v.items():
-                logging.info(f'{k}: {kk} = {vv}')
+                logging.error(f'{k}: {kk} = {vv}')
+        elif isinstance(v, bytes):
+            logging.error(f'{k}: "{v[:20]}"')
         else:
             logging.error(f'{k}: {v}')
 
