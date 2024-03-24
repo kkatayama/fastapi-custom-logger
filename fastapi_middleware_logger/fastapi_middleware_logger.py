@@ -15,15 +15,23 @@ def parse_body(content):
 def default_logger(**kwargs):
     """Logs all the available information for a normal response"""
     # logging.info(json.dumps(kwargs, indent=4))
-    for k,v in kwargs.items():
-        logging.info(f'{k}: {v}')
+    for k, v in kwargs.items():
+        if isinstance(v, dict):
+            for kk, vv in v.items():
+                logging.info(f'{k}: {kk} = {vv}')
+        else:
+            logging.error(f'{k}: {v}')
 
 
 def default_error_logger(**kwargs):
     """Logs all the available information for a response with error"""
     # logging.info(json.dumps(kwargs, indent=4))
-    for k,v in kwargs.items():
-        logging.error(f'{k}: {v}')
+    for k, v in kwargs.items():
+        if isinstance(v, dict):
+            for kk, vv in v.items():
+                logging.info(f'{k}: {kk} = {vv}')
+        else:
+            logging.error(f'{k}: {v}')
 
 
 async def set_body(request: Request, body: bytes):
